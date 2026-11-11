@@ -68,7 +68,7 @@ function render(){
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 function go(i){if(!queue.length)return;
   if(i>=queue.length){if(!loop){A.pause();return}if(shuffle)queue=mix(pool());i=0}
-  if(i<0)i=queue.length-1;pos=i;const t=queue[i];A.src=t.src;A.play().catch(()=>{});
+  if(i<0)i=queue.length-1;pos=i;const t=queue[i];A.src=t.src+(t.v?'?v='+t.v:'');A.play().catch(()=>{});
   $('np').innerHTML=`${esc(t.front)}<small>Chapter ${t.ch} · ${t.id} · ${i+1} of ${queue.length}</small>`;render();
   const el=document.querySelector('li.now');if(el)el.scrollIntoView({block:'nearest'});
   if('mediaSession' in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:t.front,artist:'Chapter '+t.ch,album:'Real Estate Flashcards'});
