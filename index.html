@@ -87,7 +87,7 @@ $('shuf').onclick=()=>{shuffle=!shuffle;try{localStorage.setItem('shuf',shuffle?
 $('loop').onclick=()=>{loop=!loop;save('loop',loop?'1':'0');render()};
 A.onended=()=>go(pos+1);
 A.onplay=()=>$('play').textContent='Pause';A.onpause=()=>$('play').textContent='Play';
-A.ontimeupdate=()=>{$('prog').max=A.duration||1;$('prog').value=A.currentTime};
+A.ontimeupdate=()=>{const t=queue[pos],d=(isFinite(A.duration)&&A.duration>0)?A.duration:((t&&t.d)||1);$('prog').max=d;$('prog').value=Math.min(A.currentTime,d)};
 if('mediaSession' in navigator){navigator.mediaSession.setActionHandler('nexttrack',()=>go(pos+1));navigator.mediaSession.setActionHandler('previoustrack',()=>go(pos-1))}
 fetch('tracks.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(t=>{all=t.sort((a,b)=>a.ch-b.ch||a.s-b.s||a.n-b.n);
   if(chapter!=='all'&&!all.some(x=>String(x.ch)===chapter))chapter='all';build(false);
