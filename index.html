@@ -62,7 +62,7 @@ function build(keep){const cur=queue[pos];queue=shuffle?mix(pool()):pool().slice
 function render(){
   const chs=[...new Set(all.map(t=>t.ch))].sort((a,b)=>a-b);
   $('chips').innerHTML=['all',...chs].map(c=>`<button class="chip${String(c)===chapter?' on':''}" data-c="${c}">${c==='all'?'All chapters':'Chapter '+c}</button>`).join('');
-  $('list').innerHTML=queue.map((t,i)=>`<li data-i="${i}" class="${i===pos?'now':''}"><span class="n">${t.id}</span><span>${esc(t.front)}</span></li>`).join('');
+  $('list').innerHTML=queue.map((t,i)=>`<li data-i="${i}" class="${i===pos?'now':''}"><span class="n">${t.id||('#'+t.n)}</span><span>${esc(t.front)}</span></li>`).join('');
   $('shuf').classList.toggle('on',shuffle);$('loop').classList.toggle('on',loop);
 }
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -83,7 +83,7 @@ A.onended=()=>go(pos+1);
 A.onplay=()=>$('play').textContent='Pause';A.onpause=()=>$('play').textContent='Play';
 A.ontimeupdate=()=>{$('prog').max=A.duration||1;$('prog').value=A.currentTime};
 if('mediaSession' in navigator){navigator.mediaSession.setActionHandler('nexttrack',()=>go(pos+1));navigator.mediaSession.setActionHandler('previoustrack',()=>go(pos-1))}
-fetch('tracks.json').then(r=>r.json()).then(t=>{all=t.sort((a,b)=>a.ch-b.ch||a.s-b.s||a.n-b.n);
+fetch('tracks.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(t=>{all=t.sort((a,b)=>a.ch-b.ch||a.s-b.s||a.n-b.n);
   if(chapter!=='all'&&!all.some(x=>String(x.ch)===chapter))chapter='all';build(false)});
 </script>
 </body>
